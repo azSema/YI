@@ -81,6 +81,7 @@ extension YI {
     public enum Error: Swift.Error, LocalizedError {
         case notAuthenticated
         case invalidCredentials
+        case invalidPassword
         case accountNotActivated
         case emailAlreadyRegistered
         case deviceNotFound
@@ -97,6 +98,8 @@ extension YI {
                 return "Not authenticated. Please login first."
             case .invalidCredentials:
                 return "Invalid email or password."
+            case .invalidPassword:
+                return "Password must be at least 8 characters with one uppercase letter and one digit."
             case .accountNotActivated:
                 return "Account not activated. Check your email."
             case .emailAlreadyRegistered:

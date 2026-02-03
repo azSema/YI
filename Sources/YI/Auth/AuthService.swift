@@ -138,6 +138,12 @@ public final class YIAuthService: @unchecked Sendable {
         language: String = "en-US",
         country: String? = nil
     ) async throws {
+        guard password.count >= 8,
+              password.contains(where: { $0.isUppercase }),
+              password.contains(where: { $0.isNumber }) else {
+            throw YI.Error.invalidPassword
+        }
+        
         logger.info("📝 Registering: \(email)")
         
         let endpoint = AuthEndpoint.register(

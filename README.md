@@ -115,10 +115,12 @@ No manual token management needed!
 
 ### Registration
 
+**Password requirements:** min 8 characters, one uppercase letter, one digit.
+
 ```swift
 try await YI.Auth.register(
     email: "user@example.com",
-    password: "password",
+    password: "Password1",
     firstName: "John",
     lastName: "Doe"
 )
@@ -384,6 +386,8 @@ do {
     let user = try await YI.Auth.login(email: email, password: password)
 } catch YI.Error.invalidCredentials {
     // Wrong email or password
+} catch YI.Error.invalidPassword {
+    // Password doesn't meet requirements (8+ chars, uppercase, digit)
 } catch YI.Error.accountNotActivated {
     // Need to activate via email
 } catch YI.Error.notAuthenticated {
