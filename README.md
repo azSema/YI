@@ -2,6 +2,26 @@
 
 Swift library for interacting with Yi/Kami camera cloud API. Supports authentication, device management, pairing, and alert/event handling.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [Initialization](#initialization-app-launch)
+  - [Configuration](#configuration)
+  - [Authentication](#authentication)
+  - [Session Persistence](#session-persistence)
+  - [Registration](#registration)
+- [Device Management](#device-management)
+- [Device Pairing](#device-pairing-full-ui-flow)
+- [Alerts (Motion Detection)](#alerts-motion-detection)
+- [Account](#account)
+- [API Reference](#api-reference)
+- [Error Handling](#error-handling)
+- [Important Notes](#important-notes)
+- [Requirements](#requirements)
+- [License](#license)
+
 ## Features
 
 - **Authentication**: Login, registration, session management
@@ -12,11 +32,11 @@ Swift library for interacting with Yi/Kami camera cloud API. Supports authentica
 
 ## Installation
 
-### Swift Package Manager (Future)
+### Swift Package Manager
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/user/YI.git", from: "1.0.0")
+    .package(url: "https://github.com/azSema/YI.git", from: "1.0.0")
 ]
 ```
 
