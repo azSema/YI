@@ -426,6 +426,145 @@ do {
 - Swift 5.5+
 - Xcode 13.0+
 
+### For RTSP Streaming (Required)
+
+RTSP streaming requires KSPlayer. Add to your `Podfile`:
+
+```ruby
+pod 'KSPlayer', :git => 'https://github.com/kingslay/KSPlayer.git', :branch => 'main'
+pod 'DisplayCriteria', :git => 'https://github.com/kingslay/KSPlayer.git', :branch => 'main'
+pod 'FFmpegKit', :git => 'https://github.com/kingslay/FFmpegKit.git', :branch => 'main'
+pod 'Libass', :git => 'https://github.com/kingslay/FFmpegKit.git', :branch => 'main'
+```
+
+Then run:
+```bash
+pod install
+```
+
+**Important:** Open `.xcworkspace` (not `.xcodeproj`) after installing pods.
+
+---
+
+## RTSP Local Streaming
+
+RTSP allows direct video streaming from camera over local network (no cloud).
+
+### How RTSP URL is Built
+
+```
+rtsp://{IP}/ch0_0.h264
+```
+
+| Part | Description | Example |
+|------|-------------|---------|
+| `rtsp://` | Protocol | - |
+| `{IP}` | Camera local IP from `device.localIP` | `192.168.1.80` |
+| `/ch0_0.h264` | Stream path (fixed for yi-hack) | - |
+
+**Full example:** `rtsp://192.168.1.80/ch0_0.h264`
+
+### Where IP Comes From
+
+IP is returned from `YI.Device.list()` in `localIP` property:
+
+```swift
+let devices = try await YI.Device.list()
+for device in devices {
+    if let ip = device.localIP {
+        let rtspURL = "rtsp://\(ip)/ch0_0.h264"
+    }
+}
+```
+
+### Using RTSPPlayerView
+
+```swift
+import YI
+
+// Check if RTSP available
+if let ip = device.localIP {
+    let url = "rtsp://\(ip)/ch0_0.h264"
+    
+    // Show player
+    RTSPPlayerView(url: url, isPresented: $showPlayer)
+}
+```
+
+### Limitations
+
+- **Local network only** - phone and camera must be on same WiFi
+- **Requires yi-hack** - standard Yi firmware doesn't support RTSP
+- **Port forwarding doesn't work** - RTSP over internet is unreliable
+
+---
+
+## yi-hack Installation Guide
+
+yi-hack is custom firmware that enables RTSP streaming on Yi cameras.
+
+### Requirements
+
+- microSD card (16 GB or less recommended)
+- Card **must be formatted as FAT32** (exFAT won't work)
+- For cards > 32GB, force format to FAT32
+
+### Installation Steps
+
+1. **Download firmware** for your camera model:
+   https://github.com/alienatedsec/yi-hack-v5/releases
+
+   | Model | Files |
+   |-------|-------|
+   | Yi 1080p Dome | `home_h20` + `rootfs_h20` |
+   | Yi Home 1080p | `home_y20` + `rootfs_y20` |
+   | Yi Outdoor | `home_h30` + `rootfs_h30` |
+
+2. **Copy to microSD card root:**
+   - `home_xx`
+   - `rootfs_xx`
+   - `yi-hack-v5` folder
+
+   **Important:** Verify filenames didn't change during copy!
+
+3. **Power off camera** (unplug power)
+
+4. **Insert microSD card** into camera
+
+5. **Power on camera** (plug in power)
+
+6. **Wait for flashing:**
+   - Yellow light ~30 sec → firmware loading
+   - Camera reboots
+   - Yellow light ~2 min → final stage
+   - Blue light → WiFi connected, done!
+
+7. **Open web interface** in browser:
+   ```
+   http://CAMERA_IP
+   ```
+   
+   Find IP in Kami Home app: Camera Settings → Network Info → IP Address
+
+### If Web Interface Doesn't Open
+
+```bash
+# Check connectivity
+ping 192.168.1.XX
+nc -zv 192.168.1.XX 22   # SSH
+nc -zv 192.168.1.XX 554  # RTSP
+
+# SSH into camera (empty password)
+ssh root@192.168.1.XX
+
+# Enable RTSP
+sed -i 's/RTSP=no/RTSP=yes/' /tmp/sd/yi-hack-v5/etc/system.conf
+
+# Start RTSP server
+/home/yi-hack-v5/script/wd_rtsp.sh &
+```
+
+
 ## License
 
 MIT License
