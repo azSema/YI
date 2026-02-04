@@ -479,6 +479,9 @@ for device in devices {
 
 ### Using RTSPPlayerView
 
+> **Note:** `RTSPPlayerView` is **not included** in the SPM package due to KSPlayer dependency.  
+> Copy `Sources/YI/RTSP/RTSPPlayerView.swift` manually into your project.
+
 ```swift
 import YI
 
